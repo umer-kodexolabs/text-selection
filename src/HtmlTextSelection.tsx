@@ -160,13 +160,10 @@ const SelectableHtmlContent = ({ htmlContent, setCleanedHtml, setHtml }) => {
   };
 
   function wrapWithReplaceTags(html, startIndex, endIndex) {
-    // Regex to match the span for the start index
     const startRegex = new RegExp(
       `<span[^>]*?data-word-index=["']${startIndex}["'][^>]*?>.*?</span>`,
       "g"
     );
-
-    // Regex to match the span for the end index
     const endRegex = new RegExp(
       `<span[^>]*?data-word-index=["']${endIndex}["'][^>]*?>.*?</span>`,
       "g"
@@ -179,7 +176,7 @@ const SelectableHtmlContent = ({ htmlContent, setCleanedHtml, setHtml }) => {
   }
 
   function removeSpanTags(htmlContent) {
-    // Use regex to remove span tags with the specific classes
+    // regex to remove span tags with the specific classes
     return htmlContent.replace(
       /<span[^>]*class="selectable-(space|word)[^>]*">(.*?)<\/span>/gis,
       "$2"
