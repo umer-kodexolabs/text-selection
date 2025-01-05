@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.selectable-word,
+.selectable-space {
+  cursor: pointer;
+  padding: 2px 0;
+  border-radius: 0px;
+  user-select: none;
+  -webkit-user-select: none;
+  display: inline;
+}
+.selectable-word.selected {
+  background-color: #93daef;
+  color: #1d809e;
+}
+.selectable-space.selected {
+  background-color: #93daef;
+  color: #1d809e;
+}

@@ -34,6 +34,7 @@ const htmlFromGPT = `
 // `;
 
 const newHtmlContent = `
+<p>
   <ul>
     <li>Promotes code reusability and maintainability</li>
     <li><strong>Asynchronous Processing</strong>: Enhances performance with non-blocking operations</li>
@@ -52,6 +53,7 @@ const newHtmlContent = `
     <li>Helps catch errors at compile time</li>
       <li>Dynamic Binding: <strong>Resolves references</strong> at runtime</li>
   </ul>
+  </p>
 `;
 
 function App() {
@@ -87,17 +89,17 @@ function App() {
           return updatedHtml;
         });
       }
-    }, 8);
+    }, 10);
   };
 
   return (
     <div className="my-4 flex mx-12">
       <div>
-        <div className="flex items-center justify-center h-[30rem] mx-auto my-6">
+        <div className="flex items-center justify-center min-h-[30rem] mx-auto my-6">
           <SelectableHtmlContent
-            setHtml={setHtml}
             setCleanedHtml={setCleanedHtml}
             htmlContent={html}
+            setHtml={setHtml}
           />
         </div>
         <div className="flex items-center justify-center">
