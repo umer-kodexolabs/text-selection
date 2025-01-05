@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { useState, useRef, useEffect } from "react";
-const SelectableHtmlContent = ({ htmlContent, setCleanedHtml }) => {
+const SelectableHtmlContent = ({ htmlContent, setCleanedHtml, setHtml }) => {
   const [selectedRange, setSelectedRange] = useState({
     start: null,
     end: null,
@@ -145,55 +145,37 @@ const SelectableHtmlContent = ({ htmlContent, setCleanedHtml }) => {
     )
       .filter((el, i) => i >= selectedRange.start && i <= selectedRange.end)
       .map((el) => el.textContent)
-      .join(""); // Remove join(" ") to preserve original spacing
+      .join("");
 
     const contentDiv = contentRef.current.innerHTML;
-    const updatedContent = wrapWithReplaceTag(
+    const extraction = wrapWithReplaceTags(
       contentDiv,
       selectedRange.start,
       selectedRange.end
     );
 
-    const cleanedHTML = removeSpanTags(updatedContent);
-    setCleanedHtml(cleanedHTML);
-    // console.log("updatedContent----------------", updatedContent);
+    const cleanedHTML = removeSpanTags(extraction);
     console.log("cleanedHTML----------------", cleanedHTML);
+    setCleanedHtml(cleanedHTML);
   };
 
-  function wrapWithReplaceTag(htmlContent, startIndex, endIndex) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlContent, "text/html");
+  function wrapWithReplaceTags(html, startIndex, endIndex) {
+    // Regex to match the span for the start index
+    const startRegex = new RegExp(
+      `<span[^>]*?data-word-index=["']${startIndex}["'][^>]*?>.*?</span>`,
+      "g"
+    );
 
-    const spans = doc.querySelectorAll("span[data-word-index]");
-    let replaceContent = ""; // Holds the combined content to wrap
-    let insideRange = false; // Tracks if we're inside the range
+    // Regex to match the span for the end index
+    const endRegex = new RegExp(
+      `<span[^>]*?data-word-index=["']${endIndex}["'][^>]*?>.*?</span>`,
+      "g"
+    );
 
-    spans.forEach((span) => {
-      const wordIndex = parseInt(span.getAttribute("data-word-index"), 10);
+    html = html.replace(startRegex, (match) => `<replace>${match}`);
+    html = html.replace(endRegex, (match) => `${match}</replace>`);
 
-      if (wordIndex >= startIndex && wordIndex <= endIndex) {
-        // Accumulate content for wrapping
-        replaceContent += span.outerHTML;
-        span.remove(); // Remove from the DOM for later replacement
-        insideRange = true;
-      } else if (insideRange) {
-        // Exiting the range: insert <replace> tag
-        const replaceTag = doc.createElement("replace");
-        replaceTag.innerHTML = replaceContent;
-        span.before(replaceTag); // Insert <replace> before the current span
-        replaceContent = ""; // Reset for next range
-        insideRange = false;
-      }
-    });
-
-    // If range ends at the last span
-    if (replaceContent) {
-      const replaceTag = doc.createElement("replace");
-      replaceTag.innerHTML = replaceContent;
-      doc.body.appendChild(replaceTag);
-    }
-
-    return doc.body.innerHTML;
+    return html;
   }
 
   function removeSpanTags(htmlContent) {

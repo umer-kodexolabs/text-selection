@@ -7,14 +7,31 @@ const htmlFromGPT = `
     <ul>
     <li><strong>Static Typing</strong>: Helps catch errors at compile time</li>
     <li>Dynamic Binding: <strong>Resolves references</strong> at runtime</li>
-    </ul> 
-    <p>These concepts are <em>fundamental</em> to understanding programming.</p>
+    </ul>
+    <p>
+    <span>
+    These concepts are <em>fundamental</em> to
+    <span>
+    understanding
+    </span>
+    <span>
+     programming.
+    </span>
+     </span>
+    </p>
     <ul>
     <li><strong>Static Typing</strong>: Helps catch errors at compile time</li>
     <li>Dynamic Binding: <strong>Resolves references</strong> at runtime</li>
     </ul>
   </div>
 `;
+
+// const htmlFromGPT = `
+//   <div>
+//     <h2>Programming</h2>
+//     <strong>Static Typing</strong>: Helps catch
+//   </div>
+// `;
 
 const newHtmlContent = `
   <ul>
@@ -78,6 +95,7 @@ function App() {
       <div>
         <div className="flex items-center justify-center h-[30rem] mx-auto my-6">
           <SelectableHtmlContent
+            setHtml={setHtml}
             setCleanedHtml={setCleanedHtml}
             htmlContent={html}
           />
